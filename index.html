@@ -3,53 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kartu Bisnis Digital - Smooth Animation</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-    <!-- Preload critical resources -->
-    <link rel="preload" href="img/card-front-ericho-agil-nugraha-pt-puja-perkasa.png" as="image">
-    <link rel="preload" href="img/card-back-ericho-agil-nugraha-pt-puja-perkasa.png" as="image">
+    <title>Business Card – PT. Puja Perkasa</title>
     
-    <!-- Tambahkan library untuk generate PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts - Exo 2 -->
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Kartu Bisnis Digital</h1>
-        
-        <div class="card-container">
-            <div class="card" id="businessCard">
-                <div class="card-front"></div>
-                <div class="card-back"></div>
+    <!-- Background Luxury Effect -->
+    <div class="luxury-bg"></div>
+    
+    <!-- Main Container -->
+    <div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center">
+        <div class="row w-100 justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-8">
+                
+                <!-- Header Section -->
+                <div class="text-center mb-4">
+                </div>
+
+                <!-- Kartu Depan -->
+                <div class="card-display mb-4">
+                    <img src="img/card-front-ericho-agil-nugraha-pt-puja-perkasa.png" 
+                         alt="Kartu Nama Depan" 
+                         class="card-image-front"
+                         id="frontCard">
+                </div>
+
+                <!-- Kartu Belakang -->
+                <div class="card-display mb-4">
+                    <img src="img/card-back-ericho-agil-nugraha-pt-puja-perkasa.png" 
+                         alt="Kartu Nama Belakang" 
+                         class="card-image-back"
+                         id="backCard">
+                </div>
+
+                <!-- Button Section -->
+                <div class="button-container">
+                    <div class="row g-3 justify-content-center">
+                        
+                        <!-- WhatsApp Button -->
+                        <div class="col-6 col-md-4">
+                            <button class="btn btn-luxury w-100" id="whatsappBtn">
+                                <i class="fab fa-whatsapp me-2"></i>WhatsApp
+                            </button>
+                        </div>
+
+                        <!-- Email Button -->
+                        <div class="col-6 col-md-4">
+                            <button class="btn btn-luxury w-100" id="emailBtn">
+                                <i class="fas fa-envelope me-2"></i>Email
+                            </button>
+                        </div>
+
+                        <!-- Simpan Button -->
+                        <div class="col-12 col-md-4">
+                            <button class="btn btn-luxury w-100" id="saveBtn">
+                                <i class="fas fa-download me-2"></i>Simpan PNG
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
-        
-        <div class="controls">
-            <button class="btn btn-flip" id="flipBtn">
-                <i class="fas fa-sync-alt"></i>
-                <span>Lihat Belakang</span>
-            </button>
-            <button class="btn btn-whatsapp" id="whatsappBtn">
-                <i class="fab fa-whatsapp"></i>
-                <span>WhatsApp</span>
-            </button>
-            <button class="btn btn-email" id="emailBtn">
-                <i class="fas fa-envelope"></i>
-                <span>Email</span>
-            </button>
-            <button class="btn btn-download" id="downloadBtn">
-                <i class="fas fa-download"></i>
-                <span>Unduh PDF</span>
-            </button>
-        </div>
     </div>
 
-    <div class="loading" id="loading">
-        <div class="spinner"></div>
-        <p>Memproses...</p>
-    </div>
-
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
     <script src="script.js"></script>
 </body>
 </html>

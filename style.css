@@ -1,401 +1,233 @@
-/* ================== VARIABEL & RESET ===================== */
-:root {
-    --primary-bg-start: #003849;
-    --primary-bg-end: #001B24;
-    --accent-color: #B99362;
-    --text-color: #B99362;
-    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
-    /* UKURAN KARTU */
-    --card-width-desktop: 700px;
-    --card-height-desktop: 420px;
-    --card-width-tablet: 600px;
-    --card-height-tablet: 360px;
-    --card-width-mobile: 380px;
-    --card-height-mobile: 228px;
-    --card-radius: 15px;
-
-    /* VARIABEL ANIMASI YANG DIPERBAIKI */
-    --flip-duration: 0.6s;
-    --flip-timing: cubic-bezier(0.645, 0.045, 0.355, 1);
-    --hover-duration: 0.3s;
-}
-
+/* style.css */
+/* Reset dan base styling */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* ================== LAYOUT UTAMA ======================= */
+/* Body dengan gradient luxury */
 body {
-    font-family: var(--font-family);
-    background: linear-gradient(135deg, var(--primary-bg-start) 0%, var(--primary-bg-end) 100%);
+    background: linear-gradient(135deg, #003849 0%, #001B24 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-height: 100vh;
-    color: var(--text-color);
-    padding: 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    color: #B99362;
+    position: relative;
     overflow-x: hidden;
 }
 
-.container {
-    text-align: center;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 90vh;
-    gap: 20px;
-}
-
-h1 {
-    margin-bottom: 12px;
-    font-size: clamp(1.8rem, 5vw, 3rem);
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    width: 100%;
-}
-
-/* =============================== KARTU UTAMA - PERBAIKAN FLIP ==================== */
-.card-container {
-    perspective: 1200px;
-    margin: 0 auto 16px;
-    width: 100%;
-    max-width: var(--card-width-desktop);
-    height: var(--card-height-desktop);
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transform-style: preserve-3d;
-    -webkit-transform-style: preserve-3d;
-}
-
-.card {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transform-style: preserve-3d;
-    -webkit-transform-style: preserve-3d;
-    transition: transform var(--flip-duration) var(--flip-timing);
-    -webkit-transition: transform var(--flip-duration) var(--flip-timing);
-    cursor: pointer;
-    transform-origin: center center;
-    transform: translate3d(0, 0, 0);
-    -webkit-transform: translate3d(0, 0, 0);
-}
-
-/* PERBAIKAN KRITIS: Fix backface visibility */
-.card.flipped {
-    transform: rotateY(180deg);
-}
-
-.card-front, .card-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    border-radius: var(--card-radius);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    transform-style: preserve-3d;
-    -webkit-transform-style: preserve-3d;
-}
-
-.card-front {
-    background-image: url('img/card-front-ericho-agil-nugraha-pt-puja-perkasa.png');
-    transform: rotateY(0deg);
-    z-index: 2;
-}
-
-.card-back {
-    background-image: url('img/card-back-ericho-agil-nugraha-pt-puja-perkasa.png');
-    transform: rotateY(180deg);
-    z-index: 1;
-}
-
-/* Efek hover yang diperbaiki */
-.card:hover {
-    transform: translateY(-5px) scale(1.02);
-}
-
-.card.flipped:hover {
-    transform: rotateY(180deg) translateY(-5px) scale(1.02);
-}
-
-/* --- TOMBOL KONTROL DENGAN ANIMASI ICON --- */
-.controls {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-    max-width: var(--card-width-desktop);
-    margin: 0 auto;
-    width: 100%;
-}
-
-.btn {
-    background: linear-gradient(135deg, var(--accent-color) 0%, #9c6b3c 100%);
-    color: #001B24;
-    border: none;
-    padding: 14px 24px;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(185, 147, 98, 0.3);
-    min-width: 140px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    position: relative;
-    overflow: hidden;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    flex: 1;
-    max-width: 160px;
-    height: 50px;
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(185, 147, 98, 0.4);
-}
-
-/* ANIMASI ICON UNTUK SETIAP TOMBOL */
-.btn i {
-    transition: all 0.3s ease;
-    position: relative;
-}
-
-/* Animasi Flip Button */
-.btn-flip:hover i {
-    transform: rotate(180deg);
-    color: #001B24;
-}
-
-/* Animasi WhatsApp Button */
-.btn-whatsapp:hover i {
-    transform: scale(1.2);
-    color: #25D366;
-    text-shadow: 0 0 10px rgba(37, 211, 102, 0.5);
-}
-
-/* Animasi Email Button */
-.btn-email:hover i {
-    transform: translateY(-2px);
-    color: #EA4335;
-    animation: bounce 0.6s ease infinite alternate;
-}
-
-/* Animasi Download Button */
-.btn-download:hover i {
-    transform: translateY(3px);
-    color: #001B24;
-    animation: pulse 1s ease infinite;
-}
-
-/* Keyframes untuk animasi */
-@keyframes bounce {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-4px); }
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-}
-
-/* Efek glow premium pada hover */
-.btn:hover {
-    background: linear-gradient(135deg, #B99362 0%, #D4B78F 100%);
-    box-shadow: 0 8px 25px rgba(185, 147, 98, 0.5);
-}
-
-/* Efek ripple pada tombol */
-.btn::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
-}
-
-.btn:hover::before {
-    width: 300px;
-    height: 300px;
-}
-
-/* =============================== RESPONSIVE DESIGN =============================== */
-/* TABLET */
-@media (max-width: 1024px) {
-    .container {
-        gap: 16px;
-        min-height: 85vh;
-    }
-    
-    h1 {
-        margin-bottom: 16px;
-        font-size: 2.8rem;
-    }
-    
-    .card-container {
-        max-width: var(--card-width-tablet);
-        height: var(--card-height-tablet);
-        margin-bottom: 16px;
-        perspective: 1000px;
-    }
-    
-    .controls {
-        max-width: var(--card-width-tablet);
-        gap: 16px;
-    }
-    
-    .btn {
-        padding: 16px 28px;
-        font-size: 1.1rem;
-        min-width: 160px;
-        max-width: 180px;
-        height: 56px;
-    }
-}
-
-/* TABLET STANDARD */
-@media (max-width: 768px) {
-    body {
-        padding: 20px;
-    }
-    
-    .container {
-        gap: 16px;
-        min-height: 80vh;
-    }
-    
-    h1 {
-        font-size: 2.4rem;
-        margin-bottom: 12px;
-    }
-    
-    .card-container {
-        max-width: var(--card-width-tablet);
-        height: var(--card-height-tablet);
-        margin-bottom: 16px;
-        perspective: 800px;
-    }
-    
-    .btn {
-        padding: 15px 26px;
-        font-size: 1.05rem;
-        min-width: 150px;
-        max-width: 170px;
-        height: 54px;
-    }
-}
-
-/* MOBILE */
-@media (max-width: 480px) {
-    body {
-        padding: 12px;
-    }
-    
-    .container {
-        gap: 16px;
-        min-height: auto;
-        padding: 20px 0;
-    }
-    
-    h1 {
-        font-size: 2rem;
-        margin-bottom: 12px;
-    }
-    
-    .card-container {
-        max-width: var(--card-width-mobile);
-        height: var(--card-height-mobile);
-        margin-bottom: 16px;
-        perspective: 600px;
-    }
-    
-    .controls {
-        flex-direction: column;
-        gap: 12px;
-        max-width: var(--card-width-mobile);
-    }
-    
-    .btn {
-        padding: 14px 24px;
-        font-size: 1rem;
-        min-width: 100%;
-        max-width: 100%;
-        height: 52px;
-    }
-}
-
-/* Loading Indicator */
-.loading {
-    display: none;
+/* Luxury Background Effect */
+.luxury-bg {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 24, 36, 0.95);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(185, 147, 98, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(185, 147, 98, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(185, 147, 98, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
 }
 
-.loading.active {
-    display: flex;
+/* Container utama */
+.container-fluid {
+    padding: 20px;
 }
 
-.spinner {
-    width: 60px;
-    height: 60px;
-    border: 3px solid transparent;
-    border-top: 3px solid var(--accent-color);
-    border-radius: 50%;
-    animation: spin 1.5s linear infinite;
+/* Styling untuk judul dengan font Exo 2 */
+.brand-title {
+    font-family: 'Exo 2', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #B99362;
+    text-shadow: 0 2px 15px rgba(185, 147, 98, 0.4);
+    margin-bottom: 3rem !important;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+/* Container untuk display kartu */
+.card-display {
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+    text-align: center;
 }
 
-/* Optimasi performa */
-html, body {
+/* Gambar kartu nama - PROPORSIONAL */
+.card-image-front, .card-image-back {
     max-width: 100%;
-    overflow-x: hidden;
+    height: auto;
+    border-radius: 20px;
+    box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.7),
+        0 15px 35px rgba(185, 147, 98, 0.2);
+    border: 3px solid rgba(185, 147, 98, 0.4);
+    transition: all 0.3s ease;
+    display: block;
+    margin: 0 auto;
 }
 
-* {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+.card-image-front:hover, .card-image-back:hover {
+    transform: translateY(-5px);
+    box-shadow: 
+        0 35px 80px rgba(0, 0, 0, 0.8),
+        0 20px 45px rgba(185, 147, 98, 0.3);
 }
 
-.card,
-.card-front,
-.card-back {
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
+/* Label kartu */
+.card-label {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #B99362;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Container untuk tombol */
+.button-container {
+    max-width: 800px;
+    margin: 3rem auto 0 auto;
+}
+
+/* Styling tombol luxury */
+.btn-luxury {
+    background: linear-gradient(135deg, rgba(185, 147, 98, 0.25) 0%, rgba(185, 147, 98, 0.15) 100%);
+    border: 3px solid #B99362;
+    color: #B99362;
+    padding: 18px 25px;
+    border-radius: 15px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(15px);
+    font-size: 1.1rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 20px rgba(185, 147, 98, 0.2);
+    margin-bottom: 1rem;
+}
+
+.btn-luxury:hover {
+    background: linear-gradient(135deg, #B99362 0%, #D4B48C 100%);
+    color: #001B24;
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(185, 147, 98, 0.5);
+    border-color: #D4B48C;
+}
+
+.btn-luxury:active {
+    transform: translateY(-1px);
+}
+
+/* Responsive design */
+@media (min-width: 1200px) {
+    .brand-title {
+        font-size: 4rem;
+    }
+    .card-display {
+        max-width: 700px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    .container-fluid {
+        padding: 30px;
+    }
+    
+    .brand-title {
+        font-size: 3.5rem;
+        margin-bottom: 4rem !important;
+    }
+    
+    .card-display {
+        max-width: 800px;
+        margin-bottom: 3rem;
+    }
+    
+    .card-image-front, .card-image-back {
+        max-width: 90%;
+    }
+    
+    .btn-luxury {
+        padding: 20px 25px;
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .container-fluid {
+        padding: 15px;
+    }
+    
+    .brand-title {
+        font-size: 2.2rem;
+        margin-bottom: 2rem !important;
+    }
+    
+    .card-display {
+        margin-bottom: 1.5rem;
+    }
+    
+    .card-image-front, .card-image-back {
+        max-width: 95%;
+    }
+    
+    .btn-luxury {
+        padding: 15px 20px;
+        font-size: 1rem;
+    }
+    
+    .card-label {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .brand-title {
+        font-size: 1.8rem;
+        letter-spacing: 2px;
+    }
+    
+    .card-display {
+        margin-bottom: 1rem;
+    }
+    
+    .btn-luxury {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .card-label {
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+    }
+}
+
+/* Animasi entrance */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-display:nth-child(1) {
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.card-display:nth-child(2) {
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+.button-container {
+    animation: fadeInUp 0.8s ease-out 0.6s both;
+}
+
+.brand-title {
+    animation: fadeInUp 0.8s ease-out;
 }
