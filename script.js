@@ -1,110 +1,233 @@
-// script.js
-// Data kontak
-const contactInfo = {
-    whatsapp: "81282183532",
-    email: "richopujaperkasa@gmail.com"
-};
-
-// Preload images
-function preloadImages() {
-    const images = [
-        'img/card-front-ericho-agil-nugraha-pt-puja-perkasa.png',
-        'img/card-back-ericho-agil-nugraha-pt-puja-perkasa.png'
-    ];
-    
-    images.forEach(src => {
-        const img = new Image();
-        img.src = src;
-    });
+/* style.css */
+/* Reset dan base styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-// Fungsi WhatsApp
-document.getElementById('whatsappBtn').addEventListener('click', function() {
-    const message = " ";
-    const whatsappUrl = `https://wa.me/62${contactInfo.whatsapp}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-});
-
-// Fungsi Email
-document.getElementById('emailBtn').addEventListener('click', function() {
-    const subject = " ";
-    const body = " ";
-    const mailtoUrl = `mailto:${contactInfo.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailtoUrl;
-});
-
-// Fungsi Simpan PNG - DOWNLOAD ASLI FILE PNG
-document.getElementById('saveBtn').addEventListener('click', function() {
-    const saveBtn = this;
-    const originalText = saveBtn.innerHTML;
-    
-    saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
-    saveBtn.disabled = true;
-
-    // Download kedua gambar sebagai PNG original
-    downloadBothPNGs();
-    
-    // Kembalikan state tombol setelah delay
-    setTimeout(() => {
-        saveBtn.innerHTML = originalText;
-        saveBtn.disabled = false;
-    }, 2000);
-});
-
-// Download kedua file PNG asli
-function downloadBothPNGs() {
-    // Create temporary links untuk download file asli
-    const frontLink = document.createElement('a');
-    frontLink.href = 'img/card-front-ericho-agil-nugraha-pt-puja-perkasa.png';
-    frontLink.download = 'Kartu-Nama-Depan-Ericho-Agil-Nugraha-PT-Puja-Perkasa.png';
-    
-    const backLink = document.createElement('a');
-    backLink.href = 'img/card-back-ericho-agil-nugraha-pt-puja-perkasa.png';
-    backLink.download = 'Kartu-Nama-Belakang-Ericho-Agil-Nugraha-PT-Puja-Perkasa.png';
-    
-    // Trigger download gambar depan
-    frontLink.click();
-    
-    // Download gambar belakang setelah delay kecil
-    setTimeout(() => {
-        backLink.click();
-        
-        // Alert konfirmasi
-        alert('Kedua kartu nama telah berhasil diunduh dalam format PNG asli dengan kualitas terbaik!');
-    }, 500);
+/* Body dengan gradient luxury */
+body {
+    background: linear-gradient(135deg, #003849 0%, #001B24 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    color: #B99362;
+    position: relative;
+    overflow-x: hidden;
 }
 
-// Efek hover pada gambar kartu
-const frontCard = document.getElementById('frontCard');
-const backCard = document.getElementById('backCard');
+/* Luxury Background Effect */
+.luxury-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(185, 147, 98, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(185, 147, 98, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(185, 147, 98, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
 
-frontCard.addEventListener('mouseenter', function() {
-    this.style.transform = 'translateY(-8px) scale(1.02)';
-});
+/* Container utama */
+.container-fluid {
+    padding: 20px;
+}
 
-frontCard.addEventListener('mouseleave', function() {
-    this.style.transform = 'translateY(-5px) scale(1)';
-});
+/* Styling untuk judul dengan font Exo 2 */
+.brand-title {
+    font-family: 'Exo 2', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #B99362;
+    text-shadow: 0 2px 15px rgba(185, 147, 98, 0.4);
+    margin-bottom: 3rem !important;
+}
 
-backCard.addEventListener('mouseenter', function() {
-    this.style.transform = 'translateY(-8px) scale(1.02)';
-});
+/* Container untuk display kartu */
+.card-display {
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+    text-align: center;
+}
 
-backCard.addEventListener('mouseleave', function() {
-    this.style.transform = 'translateY(-5px) scale(1)';
-});
+/* Gambar kartu nama - PROPORSIONAL */
+.card-image-front, .card-image-back {
+    max-width: 100%;
+    height: auto;
+    border-radius: 20px;
+    box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.7),
+        0 15px 35px rgba(185, 147, 98, 0.2);
+    border: 3px solid rgba(185, 147, 98, 0.4);
+    transition: all 0.3s ease;
+    display: block;
+    margin: 0 auto;
+}
 
-// Preload images saat halaman load
-document.addEventListener('DOMContentLoaded', function() {
-    preloadImages();
-    console.log('Kartu nama digital siap digunakan!');
-});
+.card-image-front:hover, .card-image-back:hover {
+    transform: translateY(-5px);
+    box-shadow: 
+        0 35px 80px rgba(0, 0, 0, 0.8),
+        0 20px 45px rgba(185, 147, 98, 0.3);
+}
 
-// Tambahan: Klik gambar untuk preview lebih besar
-frontCard.addEventListener('click', function() {
-    window.open(this.src, '_blank');
-});
+/* Label kartu */
+.card-label {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #B99362;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
 
-backCard.addEventListener('click', function() {
-    window.open(this.src, '_blank');
-});
+/* Container untuk tombol */
+.button-container {
+    max-width: 800px;
+    margin: 3rem auto 0 auto;
+}
+
+/* Styling tombol luxury */
+.btn-luxury {
+    background: linear-gradient(135deg, rgba(185, 147, 98, 0.25) 0%, rgba(185, 147, 98, 0.15) 100%);
+    border: 3px solid #B99362;
+    color: #B99362;
+    padding: 18px 25px;
+    border-radius: 15px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(15px);
+    font-size: 1.1rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 20px rgba(185, 147, 98, 0.2);
+    margin-bottom: 1rem;
+}
+
+.btn-luxury:hover {
+    background: linear-gradient(135deg, #B99362 0%, #D4B48C 100%);
+    color: #001B24;
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(185, 147, 98, 0.5);
+    border-color: #D4B48C;
+}
+
+.btn-luxury:active {
+    transform: translateY(-1px);
+}
+
+/* Responsive design */
+@media (min-width: 1200px) {
+    .brand-title {
+        font-size: 4rem;
+    }
+    .card-display {
+        max-width: 700px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    .container-fluid {
+        padding: 30px;
+    }
+    
+    .brand-title {
+        font-size: 3.5rem;
+        margin-bottom: 4rem !important;
+    }
+    
+    .card-display {
+        max-width: 800px;
+        margin-bottom: 3rem;
+    }
+    
+    .card-image-front, .card-image-back {
+        max-width: 90%;
+    }
+    
+    .btn-luxury {
+        padding: 20px 25px;
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .container-fluid {
+        padding: 15px;
+    }
+    
+    .brand-title {
+        font-size: 2.2rem;
+        margin-bottom: 2rem !important;
+    }
+    
+    .card-display {
+        margin-bottom: 1.5rem;
+    }
+    
+    .card-image-front, .card-image-back {
+        max-width: 95%;
+    }
+    
+    .btn-luxury {
+        padding: 15px 20px;
+        font-size: 1rem;
+    }
+    
+    .card-label {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .brand-title {
+        font-size: 1.8rem;
+        letter-spacing: 2px;
+    }
+    
+    .card-display {
+        margin-bottom: 1rem;
+    }
+    
+    .btn-luxury {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .card-label {
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+    }
+}
+
+/* Animasi entrance */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-display:nth-child(1) {
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.card-display:nth-child(2) {
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+.button-container {
+    animation: fadeInUp 0.8s ease-out 0.6s both;
+}
+
+.brand-title {
+    animation: fadeInUp 0.8s ease-out;
+}
