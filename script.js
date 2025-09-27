@@ -20,15 +20,15 @@ function preloadImages() {
 
 // Fungsi WhatsApp
 document.getElementById('whatsappBtn').addEventListener('click', function() {
-    const message = "Halo Bapak Ericho, saya tertarik dengan layanan PT Puja Perkasa";
+    const message = " ";
     const whatsappUrl = `https://wa.me/62${contactInfo.whatsapp}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
 });
 
 // Fungsi Email
 document.getElementById('emailBtn').addEventListener('click', function() {
-    const subject = "Konsultasi Layanan PT Puja Perkasa";
-    const body = "Dear Bapak Ericho Agil Nugraha,\n\nSaya ingin berkonsultasi mengenai layanan PT Puja Perkasa.\n\nHormat saya,";
+    const subject = " ";
+    const body = " ";
     const mailtoUrl = `mailto:${contactInfo.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     window.location.href = mailtoUrl;
 });
