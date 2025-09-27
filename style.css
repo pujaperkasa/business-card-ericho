@@ -13,10 +13,37 @@
     --card-radius: 15px;
     
     /* Ukuran Responsive */
-    --card-width-tablet: 90vw; /* 90% lebar viewport */
-    --card-ratio-tablet: 1.67;
-    --card-width-mobile: 95vw; /* 95% lebar viewport */
-    --card-ratio-mobile: 1.4; /* Sedikit lebih portrait di mobile */
+    /* Tablet */
+@media (max-width: 768px) {
+    .card-container {
+        max-width: var(--card-width-tablet);
+        aspect-ratio: var(--card-ratio-tablet);
+    }
+    
+    /* PERBAIKAN: Pastikan gambar tetap utuh di tablet */
+    .card-front, .card-back {
+        background-size: contain;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .card-container {
+        max-width: var(--card-width-mobile);
+        aspect-ratio: var(--card-ratio-mobile);
+    }
+    
+    /* PERBAIKAN: Optimasi untuk mobile */
+    .card-front, .card-back {
+        background-size: contain;
+        background-position: center center;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+    }
+}
 }
 
 /* ==================== LAYOUT UTAMA ==================== */
@@ -49,18 +76,19 @@ h1 {
     margin: 0 auto 40px;
     width: 100%;
     max-width: var(--card-width);
-    height: var(--card-height);
+    
+    /* PERBAIKAN CRITICAL: Gunakan aspect ratio bukan fixed height */
+    height: auto;
+    aspect-ratio: var(--card-ratio);
 }
 
 .card {
     position: relative;
     width: 100%;
-    height: 100%;
+    height: 100%; /* 100% dari container yang sudah pakai aspect ratio */
     transform-style: preserve-3d;
     transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: pointer;
-    /* ⬇️ PERBAIKAN PENTING: Tambahkan transform origin ⬇️ */
-    transform-origin: center center;
 }
 
 .card.flipped {
@@ -78,29 +106,28 @@ h1 {
     border-radius: var(--card-radius);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     overflow: hidden;
-    background-size: cover;
+    
+    /* PERBAIKAN PENTING: Gunakan contain untuk gambar utuh */
+    background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    /* ⬇️ HAPUS TRANSFORM DARI SINI ⬇️ */
-    /* transform: rotateY(0deg); */ /* ❌ DIHAPUS */
+    background-color: #001B24; /* Background fallback */
 }
 
 .card-front {
     background-image: url('img/card-front-ericho-agil-nugraha-pt-puja-perkasa.png');
-    /* ⬇️ Pastikan sisi depan tidak di-rotate ⬇️ */
-    transform: rotateY(0deg);
 }
 
 .card-back {
     background-image: url('img/card-back-ericho-agil-nugraha-pt-puja-perkasa.png');
-    /* ⬇️ HANYA rotateY, tidak ada transform lain ⬇️ */
     transform: rotateY(180deg);
 }
 
-/* Sembunyikan tag img jika menggunakan background image */
+/* PERBAIKAN: Sembunyikan tag img yang tidak digunakan */
 .card img {
     display: none;
 }
+
 
 /* ==================== TOMBOL KONTROL ==================== */
 .controls {
@@ -331,3 +358,4 @@ h1 {
     transition: all 0.3s ease;
 
 }
+
