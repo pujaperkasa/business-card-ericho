@@ -1,7 +1,7 @@
-/* ==================== KELAS UTAMA KARTU DIGITAL ==================== */
+/* =================== KELAS UTAMA KARTU DIGITAL - VERSION 2.0 ==================== */
+
 class DigitalBusinessCard {
     constructor() {
-        // ==================== ELEMENT DOM ====================
         this.card = document.getElementById('businessCard');
         this.flipBtn = document.getElementById('flipBtn');
         this.whatsappBtn = document.getElementById('whatsappBtn');
@@ -10,294 +10,205 @@ class DigitalBusinessCard {
         this.loading = document.getElementById('loading');
         
         this.isFlipped = false;
+        this.isAnimating = false;
         
         this.init();
     }
     
-    /* ==================== INISIALISASI APLIKASI ==================== */
     init() {
+        console.log('😊 Menginisialisasi Kartu Digital...');
+        
         // Event listeners
         this.flipBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.flipCard();
+            e.preventDefault();
+            this.debouncedFlip();
         });
         
         this.card.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.flipCard();
+            e.preventDefault();
+            this.debouncedFlip();
         });
         
+        // Tombol lainnya
         this.whatsappBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
+            e.preventDefault();
             this.shareOnWhatsApp();
         });
         
         this.emailBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
+            e.preventDefault();
             this.sendEmail();
         });
         
         this.downloadBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.downloadCard();
+            e.preventDefault();
+            this.downloadCardAsPDF();
         });
         
         this.preloadImages();
         this.updateFlipButtonText();
+        
+        console.log('Kartu Digital siap digunakan!');
     }
     
-    /* ==================== FUNGSI BALIK KARTU ==================== */
-    flipCard() {
-        this.isFlipped = !this.isFlipped;
-        this.card.classList.toggle('flipped', this.isFlipped);
-        this.updateFlipButtonText();
-    }
+    /* =================== DEBOUNCED FLIP - FIXED ===================== */ 
+    debouncedFlip() { 
+        if (this.isAnimating) return; 
+        
+        this.isAnimating = true; 
+        this.flipCard(); 
+        
+        setTimeout(() => { 
+            this.isAnimating = false; 
+        }, 600);
+    } 
     
-    /* ==================== UPDATE TEKS TOMBOL BALIK ==================== */
+    /* =================== FUNGSI FLIP KARTU - PERBAIKAN ===================== */ 
+    flipCard() { 
+        console.log('Memutar kartu...'); 
+        
+        this.isFlipped = !this.isFlipped; 
+        
+        requestAnimationFrame(() => { 
+            if (this.isFlipped) { 
+                this.card.classList.add('flipped'); 
+            } else { 
+                this.card.classList.remove('flipped'); 
+            }
+            
+            this.updateFlipButtonText();
+            console.log(`Status: ${this.isFlipped ? 'Belakang' : 'Depan'}`);
+        });
+    } 
+    
+    /* ================== UPDATE TEKS TOMBOL ================= */ 
     updateFlipButtonText() {
         const icon = this.flipBtn.querySelector('i');
         const textSpan = this.flipBtn.querySelector('span');
         
         if (this.isFlipped) {
             icon.className = 'fas fa-undo';
-            textSpan.textContent = 'Putar Kartu';
+            textSpan.textContent = 'Lihat Depan';
         } else {
             icon.className = 'fas fa-sync-alt';
-            textSpan.textContent = 'Putar Kartu';
+            textSpan.textContent = 'Lihat Belakang';
         }
     }
     
-    /* ==================== FUNGSI WHATSAPP ==================== */
-    shareOnWhatsApp() {
-        const phoneNumber = "6281282183532";
-        const message = "";
-        
-        const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-        window.open(url, '_blank', 'noopener,noreferrer');
-    }
-    
-    /* ==================== FUNGSI EMAIL YANG DIPERBAIKI ==================== */
-    sendEmail() {
-        const emailAddress = "richopujaperkasa@gmail.com";
-        const subject = "";
-        const body = ``;
-
-        // Encode komponen URL
-        const encodedSubject = encodeURIComponent(subject);
-        const encodedBody = encodeURIComponent(body);
-        const mailtoLink = `mailto:${emailAddress}?subject=${encodedSubject}&body=${encodedBody}`;
-        
-        console.log('Membuka email client:', mailtoLink);
-        
-        // Method 1: Direct window location (paling reliable)
-        try {
-            window.location.href = mailtoLink;
-            return;
-        } catch (error) {
-            console.log('Method 1 gagal, mencoba method 2:', error);
-        }
-        
-        // Method 2: Create anchor element
-        try {
-            const anchor = document.createElement('a');
-            anchor.href = mailtoLink;
-            anchor.style.display = 'none';
-            anchor.target = '_blank';
-            
-            document.body.appendChild(anchor);
-            anchor.click();
-            document.body.removeChild(anchor);
-            
-            // Hapus element setelah 1 detik
-            setTimeout(() => {
-                if (anchor.parentNode) {
-                    anchor.parentNode.removeChild(anchor);
-                }
-            }, 1000);
-            
-            return;
-        } catch (error) {
-            console.log('Method 2 gagal, mencoba method 3:', error);
-        }
-        
-        // Method 3: Window open
-        try {
-            const emailWindow = window.open(mailtoLink, '_blank');
-            if (!emailWindow) {
-                throw new Error('Popup diblokir');
-            }
-            return;
-        } catch (error) {
-            console.log('Method 3 gagal:', error);
-        }
-        
-        // Method 4: Fallback - show email address
-        this.showEmailFallback(emailAddress);
-    }
-    
-    /* ==================== FALLBACK JIKA EMAIL CLIENT TIDAK BISA DIBUKA ==================== */
-    showEmailFallback(emailAddress) {
-        const fallbackHTML = `
-            <div id="emailFallback" style="
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: white;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-                z-index: 10000;
-                text-align: center;
-                color: #001B24;
-                max-width: 90%;
-                width: 400px;
-            ">
-                <h3 style="margin-bottom: 15px; color: #B99362;">Email Client Tidak Terdeteksi</h3>
-                <p>Silakan copy email address berikut ke aplikasi email Anda:</p>
-                <div style="
-                    background: #f5f5f5;
-                    padding: 15px;
-                    border-radius: 5px;
-                    margin: 15px 0;
-                    font-family: monospace;
-                    font-size: 1.1em;
-                    word-break: break-all;
-                ">${emailAddress}</div>
-                <button onclick="document.getElementById('emailFallback').remove()" style="
-                    background: #B99362;
-                    color: white;
-                    border: none;
-                    padding: 10px 20px;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    margin: 5px;
-                ">Tutup</button>
-                <button onclick="this.copyEmail('${emailAddress}')" style="
-                    background: #001B24;
-                    color: white;
-                    border: none;
-                    padding: 10px 20px;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    margin: 5px;
-                ">Copy Email</button>
-            </div>
-        `;
-        
-        document.body.insertAdjacentHTML('beforeend', fallbackHTML);
-        
-        // Tambahkan fungsi copy ke window object
-        window.copyEmail = function(email) {
-            navigator.clipboard.writeText(email).then(() => {
-                alert('Email berhasil disalin: ' + email);
-            }).catch(() => {
-                // Fallback untuk browser lama
-                const textArea = document.createElement('textarea');
-                textArea.value = email;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                alert('Email berhasil disalin: ' + email);
-            });
-        };
-    }
-    
-    /* ==================== FUNGSI SIMPAN/UNDUH KARTU ==================== */
-    async downloadCard() {
+    /* ================== FUNGSI DOWNLOAD PDF BARU ================= */ 
+    async downloadCardAsPDF() {
         this.setDownloadButtonState(true);
         this.showLoading(true);
         
         try {
-            const imageFile = this.isFlipped ? 
-                'img/card-back-ericho-agil-nugraha-pt-puja-perkasa.png' : 
-                'img/card-front-ericho-agil-nugraha-pt-puja-perkasa.png';
+            // Tunggu library jsPDF siap
+            if (typeof window.jspdf === 'undefined') {
+                throw new Error('Library PDF tidak tersedia');
+            }
             
-            await this.downloadOriginalImage(imageFile);
+            const { jsPDF } = window.jspdf;
+            
+            // Ambil gambar dari elemen kartu
+            const frontImage = await this.captureCardImage(false);
+            const backImage = await this.captureCardImage(true);
+            
+            // Buat PDF baru
+            const pdf = new jsPDF({
+                orientation: 'landscape',
+                unit: 'mm',
+                format: [90, 54] // Ukuran kartu bisnis standar
+            });
+            
+            // Tambahkan halaman depan
+            pdf.addImage(frontImage, 'PNG', 0, 0, 90, 54);
+            
+            // Tambahkan halaman belakang
+            pdf.addPage();
+            pdf.addImage(backImage, 'PNG', 0, 0, 90, 54);
+            
+            // Simpan PDF
+            pdf.save('Kartu-Bisnis-Ericho-Agil-Nugraha.pdf');
+            
+            this.showSuccess('PDF berhasil diunduh!');
             
         } catch (error) {
-            console.error('Error downloading image:', error);
-            this.showError('Gagal mengunduh gambar. Silakan coba lagi.');
+            console.error('Error generating PDF:', error);
+            this.showError('Gagal mengunduh PDF. Silakan coba lagi.');
         } finally {
             this.showLoading(false);
             this.setDownloadButtonState(false);
         }
     }
     
-    /* ==================== DOWNLOAD GAMBAR ASLI ==================== */
-    async downloadOriginalImage(imagePath) {
-        try {
-            const response = await fetch(imagePath);
+    /* ================== CAPTURE CARD IMAGE ================= */ 
+    async captureCardImage(isBackSide) {
+        return new Promise((resolve, reject) => {
+            // Simpan state flip sebelumnya
+            const wasFlipped = this.isFlipped;
             
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            // Jika perlu capture belakang, pastikan kartu dalam state flipped
+            if (isBackSide && !wasFlipped) {
+                this.card.classList.add('flipped');
+            } else if (!isBackSide && wasFlipped) {
+                this.card.classList.remove('flipped');
             }
             
-            const blob = await response.blob();
-            
-            const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-            const side = this.isFlipped ? 'belakang' : 'depan';
-            const filename = `kartu-nama-${side}-${timestamp}.png`;
-            
-            this.downloadBlob(blob, filename);
-            
-        } catch (error) {
-            console.warn('Gagal fetch gambar asli, menggunakan html2canvas fallback:', error);
-            await this.downloadWithHtml2Canvas();
-        }
-    }
-    
-    /* ==================== FALLBACK DENGAN HTML2CANVAS ==================== */
-    async downloadWithHtml2Canvas() {
-        const cardElement = this.isFlipped ? 
-            this.card.querySelector('.card-back') : 
-            this.card.querySelector('.card-front');
-        
-        const originalImage = new Image();
-        const imagePath = this.isFlipped ? 
-            'img/card-back-ericho-agil-nugraha-pt-puja-perkasa.png' : 
-            'img/card-front-ericho-agil-nugraha-pt-puja-perkasa.png';
-        
-        return new Promise((resolve, reject) => {
-            originalImage.onload = async () => {
-                try {
-                    const naturalWidth = originalImage.naturalWidth;
-                    const naturalHeight = originalImage.naturalHeight;
+            // Tunggu sebentar untuk render
+            setTimeout(() => {
+                html2canvas(this.card, {
+                    scale: 2, // Kualitas tinggi
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: null
+                }).then(canvas => {
+                    // Kembalikan ke state semula
+                    if (isBackSide && !wasFlipped) {
+                        this.card.classList.remove('flipped');
+                    } else if (!isBackSide && wasFlipped) {
+                        this.card.classList.add('flipped');
+                    }
                     
-                    const canvas = await html2canvas(cardElement, {
-                        scale: Math.max(2, naturalWidth / cardElement.offsetWidth),
-                        useCORS: true,
-                        allowTaint: false,
-                        backgroundColor: null,
-                        logging: false,
-                        width: naturalWidth,
-                        height: naturalHeight
-                    });
-                    
-                    canvas.toBlob((blob) => {
-                        if (blob) {
-                            const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-                            const side = this.isFlipped ? 'belakang' : 'depan';
-                            const filename = `kartu-nama-${side}-${timestamp}.png`;
-                            this.downloadBlob(blob, filename);
-                            resolve();
-                        } else {
-                            reject(new Error('Gagal membuat blob'));
-                        }
-                    }, 'image/png', 1.0);
-                    
-                } catch (error) {
-                    reject(error);
-                }
-            };
-            
-            originalImage.onerror = () => reject(new Error('Gagal memuat gambar asli'));
-            originalImage.src = imagePath;
+                    resolve(canvas.toDataURL('image/png'));
+                }).catch(reject);
+            }, 100);
         });
     }
     
-    /* ==================== FUNGSI UNTUK MENGATUR STATE TOMBOL DOWNLOAD ==================== */
+    /* ================== FUNGSI LAINNYA ================= */ 
+    shareOnWhatsApp() {
+        const phoneNumber = "6281282183532";
+        const message = "Halo, saya tertarik dengan layanan Anda!";
+        const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank');
+    }
+    
+    sendEmail() {
+        const emailAddress = "richopujaperkasa@gmail.com";
+        const subject = "Informasi Kartu Bisnis Digital";
+        const body = "Halo, saya tertarik dengan layanan Anda!";
+        const mailtoLink = `mailto:${emailAddress}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        
+        try {
+            window.location.href = mailtoLink;
+        } catch (error) {
+            this.showEmailFallback(emailAddress);
+        }
+    }
+    
+    showEmailFallback(emailAddress) {
+        const fallbackHTML = `
+            <div id="emailFallback" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:20px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.3);z-index:10000;text-align:center;color:#001824;max-width:90%;width:400px;">
+                <h3 style="margin-bottom:15px;color:#B99362;">Email Client Tidak Terdeteksi</h3>
+                <p>Silakan copy email address berikut:</p>
+                <div style="background:#f5f5f5;padding:15px;border-radius:5px;margin:15px 0;font-family:monospace;">${emailAddress}</div>
+                <button onclick="document.getElementById('emailFallback').remove()" style="background:#B99362;color:white;border:none;padding:10px 20px;border-radius:5px;cursor:pointer;margin:5px;">Tutup</button>
+                <button onclick="navigator.clipboard.writeText('${emailAddress}').then(() => alert('Email disalin!'))" style="background:#001824;color:white;border:none;padding:10px 20px;border-radius:5px;cursor:pointer;margin:5px;">Copy Email</button>
+            </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', fallbackHTML);
+    }
+    
     setDownloadButtonState(isLoading) {
         const icon = this.downloadBtn.querySelector('i');
         const textSpan = this.downloadBtn.querySelector('span');
@@ -309,32 +220,10 @@ class DigitalBusinessCard {
         } else {
             this.downloadBtn.disabled = false;
             icon.className = 'fas fa-download';
-            textSpan.textContent = 'Unduh';
+            textSpan.textContent = 'Unduh PDF';
         }
     }
     
-    /* ==================== FUNGSI UNDUH FILE ==================== */
-    downloadBlob(blob, filename) {
-        if (!blob) {
-            this.showError('Gagal membuat file unduhan.');
-            return;
-        }
-        
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        
-        a.href = url;
-        a.download = filename;
-        a.style.display = 'none';
-        
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
-    }
-    
-    /* ==================== FUNGSI LOADING INDICATOR ==================== */
     showLoading(show) {
         if (show) {
             this.loading.classList.add('active');
@@ -343,137 +232,93 @@ class DigitalBusinessCard {
         }
     }
     
-    /* ==================== FUNGSI UNTUK MENAMPILKAN ERROR ==================== */
+    showSuccess(message) {
+        this.showNotification(message, '#4CAF50');
+    }
+    
     showError(message) {
-        const errorDiv = document.createElement('div');
-        errorDiv.style.cssText = `
+        this.showNotification(message, '#ff4444');
+    }
+    
+    showNotification(message, color) {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #ff4444;
+            background: ${color};
             color: white;
             padding: 15px 20px;
             border-radius: 5px;
             z-index: 10000;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            max-width: 300px;
+            animation: slideIn 0.3s ease;
         `;
-        errorDiv.textContent = message;
         
-        document.body.appendChild(errorDiv);
+        notification.textContent = message;
+        document.body.appendChild(notification);
         
         setTimeout(() => {
-            if (errorDiv.parentNode) {
-                errorDiv.parentNode.removeChild(errorDiv);
-            }
-        }, 5000);
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
     }
     
-    /* ==================== PRELOAD GAMBAR ==================== */
     preloadImages() {
         const images = [
             'img/card-front-ericho-agil-nugraha-pt-puja-perkasa.png',
             'img/card-back-ericho-agil-nugraha-pt-puja-perkasa.png'
         ];
         
-        let loadedCount = 0;
-        const totalImages = images.length;
-        
         images.forEach(src => {
             const img = new Image();
-            img.onload = () => {
-                loadedCount++;
-                console.log(`Gambar loaded: ${src} (${loadedCount}/${totalImages})`);
-            };
-            img.onerror = () => {
-                console.error(`Gagal memuat gambar: ${src}`);
-                this.showError(`Gambar "${src}" tidak ditemukan.`);
-            };
             img.src = src;
         });
     }
 }
 
-/* ==================== ERROR HANDLING UNTUK GAMBAR ==================== */
-window.addEventListener('error', (e) => {
-    if (e.target.tagName === 'IMG') {
-        console.error('Error loading image:', e.target.src);
-        const imgName = e.target.src.split('/').pop();
-        alert(`Gambar "${imgName}" tidak dapat dimuat. Pastikan file ada di folder "img/".`);
+/*================================================== INISIALISASI APLIKASI ================================================= */ 
+document.addEventListener('DOMContentLoaded', function() {
+    // Tunggu sampai semua resource loaded
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initApp);
+    } else {
+        initApp();
     }
-}, true);
-
-/* ==================== FALLBACK UNTUK html2canvas ==================== */
-window.addEventListener('error', (e) => {
-    if (e.target.src && e.target.src.includes('html2canvas')) {
-        console.error('html2canvas failed to load');
-        const downloadBtn = document.getElementById('downloadBtn');
-        const icon = downloadBtn.querySelector('i');
-        const textSpan = downloadBtn.querySelector('span');
-        
-        downloadBtn.disabled = true;
-        icon.className = 'fas fa-exclamation-triangle';
-        textSpan.textContent = 'Error';
-        downloadBtn.title = 'Fitur simpan tidak tersedia. Pastikan koneksi internet aktif.';
-        
+    
+    function initApp() {
         setTimeout(() => {
-            alert('Library unduhan tidak dapat dimuat. Silakan refresh halaman atau periksa koneksi internet.');
-        }, 1000);
+            try {
+                new DigitalBusinessCard();
+                console.log('🎉 Aplikasi berhasil dimuat!');
+                
+                // Tambahkan CSS untuk animasi notifikasi
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOut {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+                
+            } catch (error) {
+                console.error('❌ Error:', error);
+            }
+        }, 100);
     }
 });
 
-/* ==================== INISIALISASI APLIKASI ==================== */
-document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-        new DigitalBusinessCard();
-        console.log('✅ Kartu nama berhasil dimuat!');
-    }, 100);
-});
-
-/* ==================== FUNGSI TAMBAHAN ==================== */
-document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-        console.log('User switched tabs - pausing background processes');
-    }
-});
-
-document.addEventListener('contextmenu', (e) => {
-    if (e.target.classList.contains('card-front') || 
-        e.target.classList.contains('card-back') ||
-        e.target.closest('.card-front') || 
-        e.target.closest('.card-back')) {
-        e.preventDefault();
-    }
-});
-
-document.addEventListener('keydown', (e) => {
+/* =========================== KEYBOARD SHORTCUTS ======================= */ 
+document.addEventListener('keydown', function(e) {
     if (e.code === 'Space' && !e.target.matches('button, input, textarea')) {
         e.preventDefault();
         const card = document.getElementById('businessCard');
-        if (card) {
-            card.click();
-        }
-    }
-    
-    if (e.code === 'Escape') {
-        const loading = document.getElementById('loading');
-        if (loading.classList.contains('active')) {
-            loading.classList.remove('active');
-            const downloadBtn = document.getElementById('downloadBtn');
-            if (downloadBtn) {
-                downloadBtn.disabled = false;
-                const icon = downloadBtn.querySelector('i');
-                const textSpan = downloadBtn.querySelector('span');
-                icon.className = 'fas fa-download';
-                textSpan.textContent = 'Unduh';
-            }
-        }
+        if (card) card.click();
     }
 });
-
-/* ==================== PERFORMANCE OPTIMIZATION ==================== */
-if ('loading' in HTMLImageElement.prototype) {
-    const images = document.querySelectorAll('img[loading="lazy"]');
-    images.forEach(img => {
-        img.loading = 'lazy';
-    });
-}

@@ -1,84 +1,55 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <!-- ==================== SETUP DASAR ==================== -->
     <meta charset="UTF-8">
-    <!-- TAG PENTING: Pastikan viewport ini tetap ada untuk responsif -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- EDIT JUDUL HALAMAN DI BAWAH INI -->
-    <title> Business Card-PT. Puja Perkasa</title>
-    
-    <!-- LINK FILE CSS - Jangan dihapus -->
+    <title>Kartu Bisnis Digital - Smooth Animation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Preload critical resources -->
+    <link rel="preload" href="img/card-front-ericho-agil-nugraha-pt-puja-perkasa.png" as="image">
+    <link rel="preload" href="img/card-back-ericho-agil-nugraha-pt-puja-perkasa.png" as="image">
+    
+    <!-- Tambahkan library untuk generate PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <!-- EDIT JUDUL HALAMAN DI BAWAH INI -->
-        <h1>Business Card</h1>
+        <h1>Kartu Bisnis Digital</h1>
         
         <div class="card-container">
             <div class="card" id="businessCard">
-                <!-- ==================== BAGIAN DEPAN KARTU ==================== -->
-                <div class="card-front">
-                    <!-- 
-                    EDIT NAMA FILE GAMBAR DEPAN DI BAWAH INI:
-                    Ganti "depan.jpg" dengan nama file gambar depan Anda
-                    Pastikan file ada di folder yang sama
-                    -->
-                    <img src="img/card-front-ericho-agil-nugraha-pt-puja-perkasa.png" alt="Kartu Depan" id="frontImage">
-                </div>
-                
-                <!-- ==================== BAGIAN BELAKANG KARTU ==================== -->
-                <div class="card-back">
-                    <!-- 
-                    EDIT NAMA FILE GAMBAR BELAKANG DI BAWAH INI:
-                    Ganti "belakang.jpg" dengan nama file gambar belakang Anda
-                    Pastikan file ada di folder yang sama
-                    -->
-                    <img src="img/card-back-ericho-agil-nugraha-pt-puja-perkasa.png" alt="Kartu Belakang" id="backImage">
-                </div>
+                <div class="card-front"></div>
+                <div class="card-back"></div>
             </div>
         </div>
-
-        <!-- ==================== TOMBOL-TOMBOL ==================== -->
+        
         <div class="controls">
-            <!-- Tombol Balik Kartu -->
-            <button id="flipBtn" class="btn">
+            <button class="btn btn-flip" id="flipBtn">
                 <i class="fas fa-sync-alt"></i>
-                <span>Putar Kartu</span>
+                <span>Lihat Belakang</span>
             </button>
-            
-            <!-- Tombol WhatsApp -->
-            <button id="whatsappBtn" class="btn">
+            <button class="btn btn-whatsapp" id="whatsappBtn">
                 <i class="fab fa-whatsapp"></i>
                 <span>WhatsApp</span>
             </button>
-            <!-- TOMBOL EMAIL BARU -->
-    <button id="emailBtn" class="btn">
-        <i class="fas fa-envelope"></i>
-        <span>Email</span>
-    </button>
-            <!-- Tombol Simpan -->
-            <button id="downloadBtn" class="btn">
-                <i class="fas fa-download"></i>
-                <span>Unduh</span>
+            <button class="btn btn-email" id="emailBtn">
+                <i class="fas fa-envelope"></i>
+                <span>Email</span>
             </button>
-        </div>
-        <!-- ==================== LOADING INDICATOR ==================== -->
-        <!-- Bagian ini akan muncul saat mengunduh - biarkan seperti ini -->
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p></p> <!-- Teks loading bisa diedit -->
+            <button class="btn btn-download" id="downloadBtn">
+                <i class="fas fa-download"></i>
+                <span>Unduh PDF</span>
+            </button>
         </div>
     </div>
 
-    <!-- ==================== LIBRARY EKSTERNAL ==================== -->
-    <!-- Jangan dihapus - diperlukan untuk fungsi Simpan -->
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    
-    <!-- LINK FILE JAVASCRIPT - Jangan dihapus -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p>Memproses...</p>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

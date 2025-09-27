@@ -1,101 +1,97 @@
-/* ==================== VARIABEL & RESET ==================== */
+/* ================== VARIABEL & RESET ===================== */
 :root {
     --primary-bg-start: #003849;
     --primary-bg-end: #001B24;
     --accent-color: #B99362;
     --text-color: #B99362;
     --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    
-    /* Ukuran Kartu - SYSTEM RESPONSIVE */
-    --card-width: 500px;
-    --card-height: 300px;
-    --card-ratio: 1.67; /* Ratio 500:300 = 1.67 */
+
+    /* UKURAN KARTU */
+    --card-width-desktop: 700px;
+    --card-height-desktop: 420px;
+    --card-width-tablet: 600px;
+    --card-height-tablet: 360px;
+    --card-width-mobile: 380px;
+    --card-height-mobile: 228px;
     --card-radius: 15px;
-    
-    /* Ukuran Responsive */
-    /* Tablet */
-@media (max-width: 768px) {
-    .card-container {
-        max-width: var(--card-width-tablet);
-        aspect-ratio: var(--card-ratio-tablet);
-    }
-    
-    /* PERBAIKAN: Pastikan gambar tetap utuh di tablet */
-    .card-front, .card-back {
-        background-size: contain;
-    }
+
+    /* VARIABEL ANIMASI YANG DIPERBAIKI */
+    --flip-duration: 0.6s;
+    --flip-timing: cubic-bezier(0.645, 0.045, 0.355, 1);
+    --hover-duration: 0.3s;
 }
 
-/* Mobile */
-@media (max-width: 480px) {
-    .card-container {
-        max-width: var(--card-width-mobile);
-        aspect-ratio: var(--card-ratio-mobile);
-    }
-    
-    /* PERBAIKAN: Optimasi untuk mobile */
-    .card-front, .card-back {
-        background-size: contain;
-        background-position: center center;
-    }
-    
-    h1 {
-        font-size: 1.8rem;
-        margin-bottom: 20px;
-    }
-}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* ==================== LAYOUT UTAMA ==================== */
+/* ================== LAYOUT UTAMA ======================= */
 body {
     font-family: var(--font-family);
     background: linear-gradient(135deg, var(--primary-bg-start) 0%, var(--primary-bg-end) 100%);
     min-height: 100vh;
     color: var(--text-color);
-    padding: 20px;
+    padding: 16px;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow-x: hidden;
 }
 
 .container {
     text-align: center;
-    max-width: 100%;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 90vh;
+    gap: 20px;
 }
 
 h1 {
-    margin-bottom: 30px;
-    font-size: 2.5rem;
+    margin-bottom: 12px;
+    font-size: clamp(1.8rem, 5vw, 3rem);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    width: 100%;
 }
 
-/* ==================== KARTU UTAMA - DIPERBAIKI ==================== */
+/* =============================== KARTU UTAMA - PERBAIKAN FLIP ==================== */
 .card-container {
-    perspective: 1000px;
-    margin: 0 auto 40px;
+    perspective: 1200px;
+    margin: 0 auto 16px;
     width: 100%;
-    max-width: var(--card-width);
-    
-    /* PERBAIKAN CRITICAL: Gunakan aspect ratio bukan fixed height */
-    height: auto;
-    aspect-ratio: var(--card-ratio);
+    max-width: var(--card-width-desktop);
+    height: var(--card-height-desktop);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
 }
 
 .card {
     position: relative;
     width: 100%;
-    height: 100%; /* 100% dari container yang sudah pakai aspect ratio */
+    height: 100%;
     transform-style: preserve-3d;
-    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    -webkit-transform-style: preserve-3d;
+    transition: transform var(--flip-duration) var(--flip-timing);
+    -webkit-transition: transform var(--flip-duration) var(--flip-timing);
     cursor: pointer;
+    transform-origin: center center;
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
 }
 
+/* PERBAIKAN KRITIS: Fix backface visibility */
 .card.flipped {
     transform: rotateY(180deg);
 }
 
-/* Sisi Depan dan Belakang Kartu - DIPERBAIKI */
 .card-front, .card-back {
     position: absolute;
     width: 100%;
@@ -103,148 +99,255 @@ h1 {
     top: 0;
     left: 0;
     backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
     border-radius: var(--card-radius);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     overflow: hidden;
-    
-    /* PERBAIKAN PENTING: Gunakan contain untuk gambar utuh */
-    background-size: contain;
+    background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-color: #001B24; /* Background fallback */
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
 }
 
 .card-front {
     background-image: url('img/card-front-ericho-agil-nugraha-pt-puja-perkasa.png');
+    transform: rotateY(0deg);
+    z-index: 2;
 }
 
 .card-back {
     background-image: url('img/card-back-ericho-agil-nugraha-pt-puja-perkasa.png');
     transform: rotateY(180deg);
+    z-index: 1;
 }
 
-/* PERBAIKAN: Sembunyikan tag img yang tidak digunakan */
-.card img {
-    display: none;
+/* Efek hover yang diperbaiki */
+.card:hover {
+    transform: translateY(-5px) scale(1.02);
 }
 
+.card.flipped:hover {
+    transform: rotateY(180deg) translateY(-5px) scale(1.02);
+}
 
-/* ==================== TOMBOL KONTROL ==================== */
+/* --- TOMBOL KONTROL DENGAN ANIMASI ICON --- */
 .controls {
     display: flex;
-    gap: 15px;
+    gap: 12px;
     justify-content: center;
     flex-wrap: wrap;
-    max-width: var(--card-width);
+    max-width: var(--card-width-desktop);
     margin: 0 auto;
+    width: 100%;
 }
-/* ==================== STYLE TOMBOL KONTROL ==================== */
+
 .btn {
     background: linear-gradient(135deg, var(--accent-color) 0%, #9c6b3c 100%);
     color: #001B24;
     border: none;
-    padding: 14px 28px;
-    border-radius: 12px;
+    padding: 14px 24px;
+    border-radius: 10px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    box-shadow: 
-        0 4px 15px rgba(185, 147, 98, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(185, 147, 98, 0.3);
     min-width: 140px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
     position: relative;
     overflow: hidden;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
+    flex: 1;
+    max-width: 160px;
+    height: 50px;
 }
 
-/* Efek Hover Premium */
 .btn:hover {
-    background: linear-gradient(135deg, #d4af37 0%, #b99362 50%, #9c6b3c 100%);
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 
-        0 12px 30px rgba(185, 147, 98, 0.5),
-        0 4px 0 rgba(156, 107, 60, 0.8),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(185, 147, 98, 0.4);
+}
+
+/* ANIMASI ICON UNTUK SETIAP TOMBOL */
+.btn i {
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* Animasi Flip Button */
+.btn-flip:hover i {
+    transform: rotate(180deg);
     color: #001B24;
 }
 
-/* Efek Active */
-.btn:active {
-    transform: translateY(-1px) scale(1.01);
-    box-shadow: 
-        0 6px 20px rgba(185, 147, 98, 0.4),
-        0 2px 0 rgba(156, 107, 60, 0.8);
-}
-
-/* Efek Cahaya Emas */
-.btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.4),
-        transparent
-    );
-    transition: left 0.6s ease;
-}
-
-.btn:hover::before {
-    left: 100%;
-}
-
-/* Ikon Premium */
-.btn i {
-    font-size: 1.2em;
-    transition: all 0.3s ease;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.btn:hover i {
+/* Animasi WhatsApp Button */
+.btn-whatsapp:hover i {
     transform: scale(1.2);
-    color: #fff;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    color: #25D366;
+    text-shadow: 0 0 10px rgba(37, 211, 102, 0.5);
 }
 
-/* Efek Khusus untuk Setiap Tombol */
-#flipBtn:hover i {
-    animation: rotate 0.8s ease;
+/* Animasi Email Button */
+.btn-email:hover i {
+    transform: translateY(-2px);
+    color: #EA4335;
+    animation: bounce 0.6s ease infinite alternate;
 }
 
-#whatsappBtn:hover i {
-    animation: bounce 0.6s ease;
+/* Animasi Download Button */
+.btn-download:hover i {
+    transform: translateY(3px);
+    color: #001B24;
+    animation: pulse 1s ease infinite;
 }
 
-#downloadBtn:hover i {
-    animation: pulse 0.8s ease;
-}
-
-@keyframes rotate {
-    0% { transform: rotate(0deg) scale(1.2); }
-    100% { transform: rotate(180deg) scale(1.2); }
-}
-
+/* Keyframes untuk animasi */
 @keyframes bounce {
-    0%, 100% { transform: translateY(0) scale(1.2); }
-    50% { transform: translateY(-3px) scale(1.2); }
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-4px); }
 }
 
 @keyframes pulse {
-    0%, 100% { transform: scale(1.2); }
-    50% { transform: scale(1.4); }
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
 }
 
-/* ==================== LOADING INDICATOR ==================== */
+/* Efek glow premium pada hover */
+.btn:hover {
+    background: linear-gradient(135deg, #B99362 0%, #D4B78F 100%);
+    box-shadow: 0 8px 25px rgba(185, 147, 98, 0.5);
+}
+
+/* Efek ripple pada tombol */
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* =============================== RESPONSIVE DESIGN =============================== */
+/* TABLET */
+@media (max-width: 1024px) {
+    .container {
+        gap: 16px;
+        min-height: 85vh;
+    }
+    
+    h1 {
+        margin-bottom: 16px;
+        font-size: 2.8rem;
+    }
+    
+    .card-container {
+        max-width: var(--card-width-tablet);
+        height: var(--card-height-tablet);
+        margin-bottom: 16px;
+        perspective: 1000px;
+    }
+    
+    .controls {
+        max-width: var(--card-width-tablet);
+        gap: 16px;
+    }
+    
+    .btn {
+        padding: 16px 28px;
+        font-size: 1.1rem;
+        min-width: 160px;
+        max-width: 180px;
+        height: 56px;
+    }
+}
+
+/* TABLET STANDARD */
+@media (max-width: 768px) {
+    body {
+        padding: 20px;
+    }
+    
+    .container {
+        gap: 16px;
+        min-height: 80vh;
+    }
+    
+    h1 {
+        font-size: 2.4rem;
+        margin-bottom: 12px;
+    }
+    
+    .card-container {
+        max-width: var(--card-width-tablet);
+        height: var(--card-height-tablet);
+        margin-bottom: 16px;
+        perspective: 800px;
+    }
+    
+    .btn {
+        padding: 15px 26px;
+        font-size: 1.05rem;
+        min-width: 150px;
+        max-width: 170px;
+        height: 54px;
+    }
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+    body {
+        padding: 12px;
+    }
+    
+    .container {
+        gap: 16px;
+        min-height: auto;
+        padding: 20px 0;
+    }
+    
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 12px;
+    }
+    
+    .card-container {
+        max-width: var(--card-width-mobile);
+        height: var(--card-height-mobile);
+        margin-bottom: 16px;
+        perspective: 600px;
+    }
+    
+    .controls {
+        flex-direction: column;
+        gap: 12px;
+        max-width: var(--card-width-mobile);
+    }
+    
+    .btn {
+        padding: 14px 24px;
+        font-size: 1rem;
+        min-width: 100%;
+        max-width: 100%;
+        height: 52px;
+    }
+}
+
+/* Loading Indicator */
 .loading {
     display: none;
     position: fixed;
@@ -252,7 +355,7 @@ h1 {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 24, 36, 0.9);
+    background: rgba(0, 24, 36, 0.95);
     z-index: 1000;
     justify-content: center;
     align-items: center;
@@ -264,98 +367,35 @@ h1 {
 }
 
 .spinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid var(--accent-color);
-    border-left: 4px solid transparent;
+    width: 60px;
+    height: 60px;
+    border: 3px solid transparent;
+    border-top: 3px solid var(--accent-color);
     border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 20px;
+    animation: spin 1.5s linear infinite;
 }
 
-/* ==================== ANIMASI ==================== */
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
 
-.loading p {
-    animation: pulse 1.5s ease-in-out infinite;
+/* Optimasi performa */
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* ==================== RESPONSIVE DESIGN - DIPERBAIKI ==================== */
-
-/* Tablet */
-@media (max-width: 768px) {
-    h1 {
-        font-size: 2rem;
-    }
-    
-    .card-container {
-        max-width: var(--card-width-tablet);
-        height: var(--card-height-tablet); /* ⬅️ TAMBAHKAN HEIGHT */
-    }
-    
-    /* ⬇️ HAPUS .card height di media query ⬇️ */
-    /* .card { height: var(--card-height-tablet); } */ /* ❌ DIHAPUS */
-    
-    .btn {
-        padding: 10px 20px;
-        font-size: 0.9rem;
-        min-width: 110px;
-    }
+.card,
+.card-front,
+.card-back {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
-
-/* Mobile */
-@media (max-width: 480px) {
-    body {
-        padding: 15px;
-    }
-    
-    h1 {
-        font-size: 1.8rem;
-        margin-bottom: 20px;
-    }
-    
-    .card-container {
-        max-width: var(--card-width-mobile);
-        height: var(--card-height-mobile); /* ⬅️ TAMBAHKAN HEIGHT */
-        margin-bottom: 30px;
-    }
-    
-    /* ⬇️ HAPUS .card height di media query ⬇️ */
-    /* .card { height: var(--card-height-mobile); } */ /* ❌ DIHAPUS */
-    
-    .controls {
-        gap: 10px;
-    }
-    
-    .btn {
-        padding: 8px 16px;
-        font-size: 0.85rem;
-        min-width: 100px;
-    }
-}
-
-/* ==================== EFEK TAMBAHAN - DIPERBAIKI ==================== */
-/* ⬇️ PERBAIKAN: Hapus scale effect sementara untuk hindari pergeseran ⬇️ */
-.card:hover {
-    transform: scale(1); /* ⬅️ SEMENTARA DIHAPUS */
-}
-
-.card.flipped:hover {
-    transform: rotateY(180deg) scale(1); /* ⬅️ SEMENTARA DIHAPUS */
-}
-
-/* Alternatif efek hover yang lebih aman */
-.card:hover {
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-    transition: all 0.3s ease;
-
-}
-
