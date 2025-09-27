@@ -6,22 +6,17 @@
     --text-color: #B99362;
     --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     
-    /* Ukuran Kartu */
+    /* Ukuran Kartu - SYSTEM RESPONSIVE */
     --card-width: 500px;
     --card-height: 300px;
+    --card-ratio: 1.67; /* Ratio 500:300 = 1.67 */
     --card-radius: 15px;
     
-    /* ⬇️ VARIABEL RESPONSIVE YANG DITAMBAHKAN ⬇️ */
-    --card-width-tablet: 400px;
-    --card-height-tablet: 250px;
-    --card-width-mobile: 350px;
-    --card-height-mobile: 200px;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    /* Ukuran Responsive */
+    --card-width-tablet: 90vw; /* 90% lebar viewport */
+    --card-ratio-tablet: 1.67;
+    --card-width-mobile: 95vw; /* 95% lebar viewport */
+    --card-ratio-mobile: 1.4; /* Sedikit lebih portrait di mobile */
 }
 
 /* ==================== LAYOUT UTAMA ==================== */
@@ -334,4 +329,5 @@ h1 {
 .card:hover {
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
     transition: all 0.3s ease;
+
 }
